@@ -43,3 +43,14 @@ describe('Proof-of-Work', () => {
     expect(block.nonce).toBeGreaterThanOrEqual(0)
   })
 })
+
+describe('Genesis-block', () => {
+  it('ska starta med ett genesis-block i kedjan', () => {
+    const blockchain = new Blockchain()
+
+    expect(blockchain.chain).toHaveLength(1)
+    expect(blockchain.chain[0].index).toBe(0)
+    expect(blockchain.chain[0].previousHash).toBe('0')
+    expect(blockchain.chain[0].transactions).toEqual([])
+  })
+})
