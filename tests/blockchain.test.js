@@ -54,3 +54,21 @@ describe('Genesis-block', () => {
     expect(blockchain.chain[0].transactions).toEqual([])
   })
 })
+
+describe('Digitala produktpass', () => {
+  it('ska kunna registrera en ny produkt som väntande transaktion', () => {
+    const blockchain = new Blockchain()
+
+    const product = {
+      type: 'REGISTER',
+      productId: 'watch-001',
+      name: 'Luxury Watch',
+      owner: 'Alice'
+    }
+
+    blockchain.addTransaction(product)
+
+    expect(blockchain.pendingTransactions).toHaveLength(1)
+    expect(blockchain.pendingTransactions[0]).toEqual(product)
+  })
+})
