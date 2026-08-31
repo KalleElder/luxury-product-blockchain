@@ -72,3 +72,26 @@ describe('Digitala produktpass', () => {
     expect(blockchain.pendingTransactions[0]).toEqual(product)
   })
 })
+
+describe('Mining av produkttransaktioner', () => {
+  it('ska mina väntande transaktioner till ett nytt block', () => {
+    const blockchain = new Blockchain()
+
+    const product = {
+      type: 'REGISTER',
+      productId: 'watch-001',
+      name: 'Luxury Watch',
+      owner: 'Alice'
+    }
+
+    blockchain.addTransaction(product)
+
+    const block = blockchain.minePendingTransactions()
+
+    expect(blockchain.chain).toHaveLength(2)
+    expect(block.transactions).toContainEqual(product)
+    expect(block.previousHash).toBe(blockchain.chain[0].hash)
+    expect(block.hash.startsWith('0')).toBe(true)
+    expect(blockchain.pendingTransactions).toHaveLength(0)
+  })
+})
