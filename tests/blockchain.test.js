@@ -23,3 +23,23 @@ describe('Blockchain', () => {
     expect(hash1).toHaveLength(64)
   })
 })
+
+describe('Proof-of-Work', () => {
+  it('ska mina ett block tills hash börjar med rätt antal nollor', () => {
+    const blockchain = new Blockchain()
+    blockchain.difficulty = 1
+
+    const block = {
+      index: 1,
+      transactions: [{ productId: 'watch-001' }],
+      previousHash: '0',
+      nonce: 0,
+      hash: ''
+    }
+
+    blockchain.mineBlock(block)
+
+    expect(block.hash.startsWith('0')).toBe(true)
+    expect(block.nonce).toBeGreaterThanOrEqual(0)
+  })
+})
