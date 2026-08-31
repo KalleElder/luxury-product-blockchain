@@ -3,6 +3,7 @@ import crypto from 'crypto'
 class Blockchain {
   constructor() {
     this.difficulty = process.env.NODE_ENV === 'test' ? 1 : 2
+    this.pendingTransactions = []
     this.chain = [this.createGenesisBlock()]
   }
 
@@ -41,6 +42,12 @@ class Blockchain {
     }
 
     return block
+  }
+
+  addTransaction(transaction) {
+    this.pendingTransactions.push(transaction)
+
+    return transaction
   }
 }
 
