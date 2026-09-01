@@ -49,6 +49,25 @@ class Blockchain {
 
     return transaction
   }
+
+  minePendingTransactions() {
+    const previousBlock = this.chain[this.chain.length - 1]
+
+    const block = {
+      index: this.chain.length,
+      timestamp: Date.now(),
+      transactions: [...this.pendingTransactions],
+      previousHash: previousBlock.hash,
+      nonce: 0,
+      hash: ''
+    }
+
+    this.mineBlock(block)
+    this.chain.push(block)
+    this.pendingTransactions = []
+
+    return block
+  }
 }
 
 export default Blockchain
