@@ -95,3 +95,30 @@ describe('Mining av produkttransaktioner', () => {
     expect(blockchain.pendingTransactions).toHaveLength(0)
   })
 })
+
+describe('State validation', () => {
+  it('ska tillåta ägarbyte när avsändaren är produktens nuvarande ägare', () => {
+    const blockchain = new Blockchain()
+
+    blockchain.addTransaction({
+      type: 'REGISTER',
+      productId: 'watch-001',
+      name: 'Luxury Watch',
+      owner: 'Alice'
+    })
+
+    blockchain.minePendingTransactions()
+
+    const transfer = {
+      type: 'TRANSFER',
+      productId: 'watch-001',
+      from: 'Alice',
+      to: 'Bob'
+    }
+
+    const result = blockchain.transferProduct(transfer)
+
+    expect(result).toEqual(transfer)
+    expect(blockchain.pendingTransactions).toContainEqual(transfer)
+  })
+})
