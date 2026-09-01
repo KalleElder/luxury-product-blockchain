@@ -50,3 +50,35 @@ describe('Validering av produkt', () => {
     )
   })
 })
+
+describe('Ägarbyte via API', () => {
+  it('POST /transfers ska genomföra ett giltigt ägarbyte', async () => {
+    await request(app)
+      .post('/products')
+      .send({
+        productId: 'watch-003',
+        name: 'Luxury Watch',
+        owner: 'Alice'
+      })
+
+    await request(app)
+      .post('/mine')
+
+    const response = await request(app)
+      .post('/transfers')
+      .send({
+        productId: 'watch-003',
+        from: 'Alice',
+        to: 'Bob'
+      })
+
+    expect(response.status).toBe(201)
+    expect(response.body.message).toBe('Ägarbytet har registrerats')
+    expect(response.body.transaction).toEqual({
+      type: 'TRANSFER',
+      productId: 'watch-003',
+      from: 'Alice',
+      to: 'Bob'
+    })
+  })
+})
