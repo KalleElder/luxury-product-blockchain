@@ -13,3 +13,24 @@ describe('Blockchain API', () => {
     expect(response.body.chain).toHaveLength(1)
   })
 })
+
+describe('Produkt-API', () => {
+  it('POST /products ska registrera ett digitalt produktpass', async () => {
+    const product = {
+      productId: 'watch-002',
+      name: 'Luxury Watch',
+      owner: 'Alice'
+    }
+
+    const response = await request(app)
+      .post('/products')
+      .send(product)
+
+    expect(response.status).toBe(201)
+    expect(response.body.message).toBe('Produkten har registrerats')
+    expect(response.body.transaction).toEqual({
+      type: 'REGISTER',
+      ...product
+    })
+  })
+})
