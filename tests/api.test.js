@@ -82,3 +82,31 @@ describe('Ägarbyte via API', () => {
     })
   })
 })
+
+describe('Ogiltigt ägarbyte via API', () => {
+  it('POST /transfers ska neka en avsändare som inte äger produkten', async () => {
+    await request(app)
+      .post('/products')
+      .send({
+        productId: 'watch-004',
+        name: 'Luxury Watch',
+        owner: 'Alice'
+      })
+
+    await request(app)
+      .post('/mine')
+
+    const response = await request(app)
+      .post('/transfers')
+      .send({
+        productId: 'watch-004',
+        from: 'Charlie',
+        to: 'Bob'
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe(
+      'Avsändaren är inte produktens nuvarande ägare'
+    )
+  })
+})
