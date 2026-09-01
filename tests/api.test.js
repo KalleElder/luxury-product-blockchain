@@ -34,3 +34,19 @@ describe('Produkt-API', () => {
     })
   })
 })
+
+describe('Validering av produkt', () => {
+  it('POST /products ska returnera 400 om productId saknas', async () => {
+    const response = await request(app)
+      .post('/products')
+      .send({
+        name: 'Luxury Watch',
+        owner: 'Alice'
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe(
+      'productId, name och owner måste anges'
+    )
+  })
+})
