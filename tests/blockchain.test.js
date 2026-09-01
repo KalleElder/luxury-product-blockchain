@@ -149,3 +149,24 @@ describe('Ogiltigt ägarbyte', () => {
     expect(blockchain.pendingTransactions).toHaveLength(0)
   })
 })
+
+describe('Verifiering av blockkedjan', () => {
+  it('ska upptäcka om ett block har manipulerats', () => {
+    const blockchain = new Blockchain()
+
+    blockchain.addTransaction({
+      type: 'REGISTER',
+      productId: 'watch-001',
+      name: 'Luxury Watch',
+      owner: 'Alice'
+    })
+
+    blockchain.minePendingTransactions()
+
+    expect(blockchain.isChainValid()).toBe(true)
+
+    blockchain.chain[1].transactions[0].owner = 'Charlie'
+
+    expect(blockchain.isChainValid()).toBe(false)
+  })
+})
