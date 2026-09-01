@@ -68,6 +68,40 @@ class Blockchain {
 
     return block
   }
+
+  getCurrentOwner(productId) {
+    let owner = null
+
+    for (const block of this.chain) {
+      for (const transaction of block.transactions) {
+        if (transaction.productId !== productId) {
+          continue
+        }
+
+        if (transaction.type === 'REGISTER') {
+          owner = transaction.owner
+        }
+
+        if (transaction.type === 'TRANSFER') {
+          owner = transaction.to
+        }
+      }
+    }
+
+    return owner
+  }
+
+  transferProduct(transfer) {
+    const currentOwner = this.getCurrentOwner(transfer.productId)
+
+    if (currentOwner !== transfer.from) {
+      throw new Error('Avsändaren är inte produktens nuvarande ägare')
+    }
+
+    this.pendingTransactions.push(transfer)
+
+    return transfer
+  }
 }
 
 export default Blockchain
