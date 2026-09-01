@@ -122,3 +122,30 @@ describe('State validation', () => {
     expect(blockchain.pendingTransactions).toContainEqual(transfer)
   })
 })
+
+describe('Ogiltigt ägarbyte', () => {
+  it('ska neka ägarbyte när avsändaren inte är produktens nuvarande ägare', () => {
+    const blockchain = new Blockchain()
+
+    blockchain.addTransaction({
+      type: 'REGISTER',
+      productId: 'watch-001',
+      name: 'Luxury Watch',
+      owner: 'Alice'
+    })
+
+    blockchain.minePendingTransactions()
+
+    const transfer = {
+      type: 'TRANSFER',
+      productId: 'watch-001',
+      from: 'Charlie',
+      to: 'Bob'
+    }
+
+    expect(() => blockchain.transferProduct(transfer))
+      .toThrow('Avsändaren är inte produktens nuvarande ägare')
+
+    expect(blockchain.pendingTransactions).toHaveLength(0)
+  })
+})
