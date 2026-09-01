@@ -102,6 +102,30 @@ class Blockchain {
 
     return transfer
   }
+
+  isChainValid() {
+    for (let i = 1; i < this.chain.length; i++) {
+      const currentBlock = this.chain[i]
+      const previousBlock = this.chain[i - 1]
+
+      const calculatedHash = this.calculateHash(
+        currentBlock.index,
+        currentBlock.previousHash,
+        currentBlock.transactions,
+        currentBlock.nonce
+      )
+
+      if (currentBlock.hash !== calculatedHash) {
+        return false
+      }
+
+      if (currentBlock.previousHash !== previousBlock.hash) {
+        return false
+      }
+    }
+
+    return true
+  }
 }
 
 export default Blockchain
