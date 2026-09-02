@@ -120,3 +120,39 @@ describe('Verifiering via API', () => {
     expect(response.body.valid).toBe(true)
   })
 })
+
+describe('Digitalt produktpass via API', () => {
+  it('GET /products/:productId ska returnera produktens ägare och historik', async () => {
+    await request(app)
+      .post('/products')
+      .send({
+        productId: 'watch-005',
+        name: 'Luxury Watch',
+        owner: 'Alice'
+      })
+
+    await request(app)
+      .post('/mine')
+
+    await request(app)
+      .post('/transfers')
+      .send({
+        productId: 'watch-005',
+        from: 'Alice',
+        to: 'Bob'
+      })
+
+    await request(app)
+      .post('/mine')
+
+    const response = await request(app)
+      .get('/products/watch-005')
+
+    expect(response.status).toBe(200)
+    expect(response.body.productId).toBe('watch-005')
+    expect(response.body.currentOwner).toBe('Bob')
+    expect(response.body.history).toHaveLength(2)
+    expect(response.body.history[0].type).toBe('REGISTER')
+    expect(response.body.history[1].type).toBe('TRANSFER')
+  })
+})
