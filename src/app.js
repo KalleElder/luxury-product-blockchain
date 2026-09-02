@@ -15,6 +15,12 @@ app.get('/blockchain', (req, res) => {
   })
 })
 
+app.get('/verify', (req, res) => {
+  res.status(200).json({
+    valid: blockchain.isChainValid()
+  })
+})
+
 app.post('/products', validateProduct, (req, res) => {
   const transaction = {
     type: 'REGISTER',
