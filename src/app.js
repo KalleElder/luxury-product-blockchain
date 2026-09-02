@@ -21,6 +21,24 @@ app.get('/verify', (req, res) => {
   })
 })
 
+app.get('/products/:productId', (req, res) => {
+  const productId = req.params.productId
+  const history = blockchain.getProductHistory(productId)
+  const currentOwner = blockchain.getCurrentOwner(productId)
+
+  if (history.length === 0) {
+    return res.status(404).json({
+      error: 'Produkten hittades inte'
+    })
+  }
+
+  res.status(200).json({
+    productId,
+    currentOwner,
+    history
+  })
+})
+
 app.post('/products', validateProduct, (req, res) => {
   const transaction = {
     type: 'REGISTER',

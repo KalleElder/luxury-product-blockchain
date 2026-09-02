@@ -91,6 +91,20 @@ class Blockchain {
     return owner
   }
 
+  getProductHistory(productId) {
+    const history = []
+
+    for (const block of this.chain) {
+      for (const transaction of block.transactions) {
+        if (transaction.productId === productId) {
+          history.push(transaction)
+        }
+      }
+    }
+
+    return history
+  }
+
   transferProduct(transfer) {
     const currentOwner = this.getCurrentOwner(transfer.productId)
 
