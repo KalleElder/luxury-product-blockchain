@@ -47,12 +47,18 @@ app.post('/products', validateProduct, (req, res) => {
     owner: req.body.owner
   }
 
-  blockchain.addTransaction(transaction)
+  try {
+    blockchain.registerProduct(transaction)
 
-  res.status(201).json({
-    message: 'Produkten har registrerats',
-    transaction
-  })
+    res.status(201).json({
+      message: 'Produkten har registrerats',
+      transaction
+    })
+  } catch (error) {
+    res.status(400).json({
+      error: error.message
+    })
+  }
 })
 
 app.post('/mine', (req, res) => {

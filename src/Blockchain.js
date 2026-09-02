@@ -50,6 +50,25 @@ class Blockchain {
     return transaction
   }
 
+  registerProduct(product) {
+    const alreadyRegistered = this.getProductHistory(product.productId)
+      .some(transaction => transaction.type === 'REGISTER')
+
+    const waitingForMining = this.pendingTransactions
+      .some(transaction =>
+        transaction.type === 'REGISTER' &&
+        transaction.productId === product.productId
+      )
+
+    if (alreadyRegistered || waitingForMining) {
+      throw new Error('Produkten är redan registrerad')
+    }
+
+    this.pendingTransactions.push(product)
+
+    return product
+  }
+
   minePendingTransactions() {
     const previousBlock = this.chain[this.chain.length - 1]
 
