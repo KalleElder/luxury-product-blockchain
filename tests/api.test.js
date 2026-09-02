@@ -110,3 +110,13 @@ describe('Ogiltigt ägarbyte via API', () => {
     )
   })
 })
+
+describe('Verifiering via API', () => {
+  it('GET /verify ska returnera om blockkedjan är giltig', async () => {
+    const response = await request(app)
+      .get('/verify')
+
+    expect(response.status).toBe(200)
+    expect(response.body.valid).toBe(true)
+  })
+})
