@@ -170,3 +170,27 @@ describe('Verifiering av blockkedjan', () => {
     expect(blockchain.isChainValid()).toBe(false)
   })
 })
+
+describe('Unikt produktpass', () => {
+  it('ska neka registrering om productId redan finns', () => {
+    const blockchain = new Blockchain()
+
+    blockchain.registerProduct({
+      type: 'REGISTER',
+      productId: 'watch-001',
+      name: 'Luxury Watch',
+      owner: 'Alice'
+    })
+
+    blockchain.minePendingTransactions()
+
+    expect(() => {
+      blockchain.registerProduct({
+        type: 'REGISTER',
+        productId: 'watch-001',
+        name: 'Fake Watch',
+        owner: 'Charlie'
+      })
+    }).toThrow('Produkten är redan registrerad')
+  })
+})
